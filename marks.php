@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <?php require_once("./create_db.php");  
+  <?php require_once("./create_db.php");
   $student_id = $_GET['studentId'];
   $getStudentById = "SELECT surname, name, group_name FROM students WHERE id = $student_id";
   $students = $mysqli->query($getStudentById);
@@ -22,16 +22,26 @@
   $marks = $mysqli->query($getAllMarks);
 
   if (!$marks->num_rows > 0) {
-    echo "No marks found$nl";
-  }
+    echo "No marks found";
+  } else {
+    echo '<table border="1">';
+    echo '<tr>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Ticket</th>
+            <th>Mark</th>
+          </tr>';
 
-  while ($row = $marks->fetch_array()) {
-    echo "Subject: " . $row['subject'] . " " 
-    . "Teacher: " . " " 
-    . $row['teacher'] . " " 
-    . "Ticket: " . " " 
-    . $row['ticket_number'] . " " 
-    .  "Mark: " . " " . $row['mark'] . $nl;
+    while ($row = $marks->fetch_array()) {
+      echo '<tr>
+              <td>' . $row['subject'] . '</td>
+              <td>' . $row['teacher'] . '</td>
+              <td>' . $row['ticket_number'] . '</td>
+              <td>' . $row['mark'] . '</td>
+            </tr>';
+    }
+
+    echo '</table>';
   }
   ?>
 </body>

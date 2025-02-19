@@ -1,39 +1,39 @@
-<body>
-  <?php
-  // new line
-  $nl = "<br>";
+<?php
+$nl = "<br>";
+$showLogs = (count(debug_backtrace()) === 0); // Check if file opened dirrectly or using require_once();
 
-  try {
-    // Connect to the server
-    $mysqli = new mysqli("localhost", "root");
-    echo "Connection established successfuly$nl";
+function logMessage($message)
+{
+  global $showLogs, $nl;
+  if ($showLogs) {
+    echo $message . $nl;
+  }
+}
 
-    // Create new database
-    $dbName = "Marks";
-    $query = "CREATE DATABASE IF NOT EXISTS $dbName";
-    $mysqli->query($query);
-    echo "Database created successfuly$nl";
+try {
+  $mysqli = new mysqli("localhost", "root");
+  logMessage("Connection established successfully");
 
-    // Select database
-    $mysqli->select_db($dbName);
+  $dbName = "Marks";
+  $query = "CREATE DATABASE IF NOT EXISTS $dbName";
+  $mysqli->query($query);
+  logMessage("Database created successfully");
 
-    // Create new user 'admin'
-    $query = "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' IDENTIFIED by 'admin' WITH GRANT OPTION";
-    $mysqli->query($query);
-    echo "User created successfuly$nl";
+  $mysqli->select_db($dbName);
 
-    // Створюємо таблицю
-    $createTable = "CREATE TABLE IF NOT EXISTS students (
+  $query = "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' IDENTIFIED by 'admin' WITH GRANT OPTION";
+  $mysqli->query($query);
+  logMessage("User created successfully");
+
+  $createTable = "CREATE TABLE IF NOT EXISTS students (
       id INT NOT NULL AUTO_INCREMENT, 
       PRIMARY KEY (id), 
       surname VARCHAR(25), 
       name VARCHAR(20), 
       group_name VARCHAR(20)
     )";
-    $mysqli->query($createTable);
-    echo "Table 'student' created successfuly$nl";
-  } catch (mysqli_sql_exception $error) { // Handle errors
-    echo "Error: " . $error->getMessage() . "$nl";
-  }
-  ?>
-</body>
+  $mysqli->query($createTable);
+  logMessage("Table 'student' created successfully");
+} catch (mysqli_sql_exception $error) {
+  logMessage("Error: " . $error->getMessage());
+}
